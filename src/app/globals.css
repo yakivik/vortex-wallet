@@ -1,26 +1,136 @@
-@import "tailwindcss";
+/* Подключаем базовые стили Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* --- Наши кастомные глобальные стили --- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --glow-color-1: hsl(180, 100%, 50%);
+  --glow-color-2: hsl(280, 100%, 70%);
+  --glow-color-1-rgb: 0, 255, 255;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Цвет фона и текста теперь управляется классами Tailwind в layout.js,
+     но можно оставить их здесь как запасной вариант. */
+  overscroll-behavior: none;
+}
+
+/* --- Фоновые эффекты --- */
+.aurora-spotlight {
+  position: fixed;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  width: 800px;
+  height: 800px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--glow-color-1) 0%, var(--glow-color-2) 40%, transparent 70%);
+  opacity: 0.15;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: -1; /* Ставим за контентом */
+}
+
+@keyframes move-stars {
+  from { background-position: 0 0; }
+  to { background-position: -10000px 5000px; }
+}
+
+.stars-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), 
+                    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), 
+                    radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), 
+                    radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), 
+                    radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)), 
+                    radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: move-stars 200s linear infinite;
+  opacity: 0.5;
+  z-index: -2; /* Ставим за эффектом "Авроры" */
+}
+
+/* --- Кастомные классы компонентов, которые мы будем использовать --- */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  transition: background 0.3s, border 0.3s;
+}
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-input {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  color: white;
+  transition: background 0.3s, border 0.3s;
+  outline: none;
+}
+.glass-input:focus {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glow-color-1);
+  box-shadow: 0 0 15px rgba(var(--glow-color-1-rgb), 0.3);
+}
+
+.primary-button {
+  background: linear-gradient(45deg, var(--glow-color-1), var(--glow-color-2));
+  color: white;
+  font-weight: bold;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px var(--glow-color-1), 0 0 10px var(--glow-color-2);
+}
+.primary-button:disabled {
+  background: #555;
+  color: #999;
+  cursor: not-allowed;
+}
+
+@keyframes welcome-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--glow-color-1)); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 25px var(--glow-color-2)); }
+}
+
+.welcome-icon-wrapper {
+  padding: 2rem;
+  background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+  border-radius: 50%;
+}
+
+.welcome-icon {
+  animation: welcome-pulse 5s ease-in-out infinite;
+  color: var(--glow-color-1);
+}
+
+@keyframes cosmicReveal {
+  0% { opacity: 0; filter: blur(8px) brightness(3); transform: translateY(20px) scale(1.2); }
+  50% { opacity: 0.8; filter: blur(2px) brightness(1.5); }
+  100% { opacity: 1; filter: blur(0) brightness(1); transform: translateY(0) scale(1); }
+}
+
+.animated-title span {
+  display: inline-block;
+  opacity: 0;
+  animation-name: cosmicReveal;
+  animation-duration: 0.8s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
 }
