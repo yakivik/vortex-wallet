@@ -145,7 +145,7 @@ const MainWalletView = ({ holdings, marketCoins }) => {
                         );
                     }) : (
                         <div className="text-center py-16 glass-card">
-                            <p className="text-gray-500">Добавьте монеты из раздела "Рынок".</p>
+                            <p className="text-gray-500">{'Добавьте монеты из раздела "Рынок".'}</p>
                         </div>
                     )}
                 </div>
@@ -276,7 +276,7 @@ const VerificationView = () => (
         <header className="text-center my-8"><h1 className="text-4xl font-bold">Верификация</h1><p className="text-gray-400">Подтвердите свою личность</p></header>
         <div className="flex-grow glass-card p-8 flex flex-col items-center justify-center text-center">
             <Shield size={64} className="text-cyan-300 mb-4"/>
-            <h2 className="text-2xl font-bold mb-2">Этот раздел в разработке</h2>
+            <h2 className="text-2xl font-bold mb-2">{'Этот раздел в разработке'}</h2>
             <p className="text-gray-400">Здесь будет форма для загрузки документов для прохождения верификации (KYC).</p>
         </div>
     </div>
