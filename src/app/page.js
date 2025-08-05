@@ -1,7 +1,8 @@
 "use client"; // Очень важная директива для Next.js
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { LogIn, UserPlus, Home, BarChart2, Layers, LogOut, Star, PlusCircle, X, Shield, User, Eye, CheckCircle, RefreshCw } from 'lucide-react';
+import Image from 'next/image'; // Импортируем компонент Image
+import { LogIn, Home, BarChart2, Layers, LogOut, Star, X, Shield, User, Eye, CheckCircle, RefreshCw } from 'lucide-react';
 
 // --- НАСТРОЙКА FIREBASE ---
 import { initializeApp, getApps } from "firebase/app";
@@ -14,11 +15,11 @@ import {
     setPersistence,
     browserLocalPersistence
 } from "firebase/auth";
-import { getFirestore, doc, setDoc, onSnapshot, getDoc, updateDoc, arrayUnion, query, collection, where, getDocs, arrayRemove } from "firebase/firestore";
+import { getFirestore, doc, setDoc, onSnapshot, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 // =================================================================================
-// ВАЖНО: Теперь мы читаем ключи из переменных окружения для безопасности.
-// Вы добавите эти переменные в настройках Vercel на этапе публикации.
+// ВАЖНО: Ключи читаются из переменных окружения для безопасности.
+// Вы добавите их в настройках Vercel на этапе публикации.
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -34,16 +35,12 @@ const API_URL_MARKETS = 'https://api.coingecko.com/api/v3/coins/markets?vs_curre
 const API_URL_COIN_DETAILS = 'https://api.coingecko.com/api/v3/coins/';
 const REFRESH_INTERVAL = 60000;
 
-// ВАЖНО: НАСТРОЙКА АДМИНИСТРАТОРА
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID; // Также выносим в переменные окружения
+// НАСТРОЙКА АДМИНИСТРАТОРА
+const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
 
 // --- Безопасная инициализация сервисов Firebase ---
-// Эта функция гарантирует, что Firebase инициализируется только один раз.
 const getFirebaseApp = () => {
-    if (getApps().length === 0) {
-        return initializeApp(firebaseConfig);
-    }
-    return getApps()[0];
+    return getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 };
 
 const app = getFirebaseApp();
@@ -134,7 +131,7 @@ const MainWalletView = ({ holdings, marketCoins }) => {
                         return (
                             <div key={holding.id} className="glass-card flex items-center justify-between p-4 transition-all hover:scale-[1.02]">
                                 <div className="flex items-center gap-4">
-                                    {coinData.image ? <img src={coinData.image} alt={coinData.name} className="w-10 h-10" /> : <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><Star className="text-yellow-400"/></div>}
+                                    {coinData.image ? <Image src={coinData.image} alt={coinData.name} width={40} height={40} /> : <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><Star className="text-yellow-400"/></div>}
                                     <div>
                                         <p className="font-semibold">{coinData.name}</p>
                                         <p className="text-xs text-gray-400">{coinData.symbol.toUpperCase()}</p>
@@ -202,7 +199,7 @@ const MarketView = ({ marketCoins, onTrackCoin, onUntrackCoin, holdings, isLoadi
                             {isDetailsLoading ? <p>Загрузка...</p> : (
                                 <>
                                     <div className="flex items-center gap-3">
-                                        <img src={selectedCoin.image} className="w-10 h-10"/> 
+                                        <Image src={selectedCoin.image} alt={selectedCoin.name} width={40} height={40}/> 
                                         <h2 className="text-2xl font-bold">{selectedCoin.name}</h2>
                                     </div>
                                     <div className="flex justify-between items-center">
@@ -245,7 +242,7 @@ const MarketView = ({ marketCoins, onTrackCoin, onUntrackCoin, holdings, isLoadi
                 {filteredCoins.filter(c => c.id !== 'vex').map(coin => (
                     <div key={coin.id} className="glass-card p-4 flex items-center justify-between transition-all hover:scale-[1.02]">
                         <div className="flex items-center gap-4 flex-grow cursor-pointer" onClick={() => handleCoinClick(coin)}>
-                            <img src={coin.image} alt={coin.name} className="w-10 h-10"/>
+                            <Image src={coin.image} alt={coin.name} width={40} height={40}/>
                             <div>
                                 <p className="font-bold">{coin.name} <span className="text-gray-400 text-sm">{coin.symbol.toUpperCase()}</span></p>
                                 <p className="text-sm">${coin.current_price.toLocaleString()}</p>
